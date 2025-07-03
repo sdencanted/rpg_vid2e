@@ -32,6 +32,8 @@ def process_dir(outdir, indir, args):
     num_events = 0
 
     counter = 0
+    (height,width,_)=cv2.imread(image_files[0]).shape
+    device=torch.device("cuda")
     for image_file, timestamp_ns in zip(image_files, timestamps_ns):
         image = cv2.imread(image_file, cv2.IMREAD_GRAYSCALE)
         log_image = np.log(image.astype("float32") / 255 + 1e-5)
@@ -42,12 +44,32 @@ def process_dir(outdir, indir, args):
         # for the first image, no events are generated, so this needs to be skipped
         if sub_events is None:
             continue
+        #kroneckerdelta generation
+        xs = sub_events['x'].to(torch.int32)
+        ys = sub_events['y'].to(torch.int32)
+        idx=(xs + (ys)* width)
+        kronecker_img = torch.zeros((height*width), dtype=torch.int16,device=device)
+        ps=torch.ones((xs.shape[0]),dtype=torch.int16,device=device)
+        kronecker_img.index_add_(dim=0,index=idx,source=ps)
 
-        sub_events = {k: v.cpu() for k, v in sub_events.items()}    
+
+        # 90 percentile max
+        nonzero_mask=kronecker_img != 0
+        nonzero_voxel = kronecker_img[nonzero_mask]
+        if nonzero_voxel.numel()>0:
+            event_min=max(0,nonzero_voxel.min().item())
+            scale=255/ max(1,(torch.quantile(nonzero_voxel.to(torch.float),0.9)-event_min))
+        else:
+            scale=255
+        kronecker_img_out = torch.reshape( torch.clamp((kronecker_img*scale-event_min),0,255).to(torch.uint8) , (height, width))
+        kronecker_img_out = kronecker_img_out.to(torch.device("cpu")).numpy()
+
+        cv2.imwrite(os.path.join(outdir, "%010d.png" % counter), kronecker_img_out)
+        # sub_events = {k: v.cpu() for k, v in sub_events.items()}    
         num_events += len(sub_events['t'])
  
-        # do something with the events
-        np.savez(os.path.join(outdir, "%010d.npz" % counter), **sub_events)
+        # # do something with the events
+        # np.savez(os.path.join(outdir, "%010d.npz" % counter), **sub_events)
         pbar.set_description(f"Num events generated: {num_events}")
         pbar.update(1)
         counter += 1

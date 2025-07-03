@@ -1,0 +1,38 @@
+python3 esim_torch/generate_events.py --input_dir=test_out \
+                                     --output_dir=test_events \
+                                     --contrast_threshold_neg=0.2 \
+                                     --contrast_threshold_pos=0.2 \
+                                     --refractory_period_ns=0
+
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697698895_dover_50m_3ppl/rgb
+
+
+
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697698895_dover_50m_3ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697699104_dover_50m_1ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697699310_dover_50m_7ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697699933_dover_25m_1ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697700124_dover_25m_3ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697700351_dover_25m_7ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697700735_dover_10m_1ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697700938_dover_10m_3ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697701144_dover_10m_7ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697701415_dover_mix_7ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697707017_defu_50m_7ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697707342_defu_25m_7ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697707900_defu_10m_7ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697708147_defu_mix_7ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697708714_defu_10m_3ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697708984_defu_25m_3ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697709211_defu_50m_3ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697709431_defu_50m_1ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697709660_defu_25m_1ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/191023/recording_1697709923_defu_10m_1ppl/rgb_interpolated
+
+
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/msia/sireh_park/train/recording_1693044264_20m_sireh_park_7ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/msia/sireh_park/train/recording_1693045007_10m_sireh_park_3ppl/rgb_interpolated
+python3 esim_torch/scripts/generate_kronecker.py --input_dir=/home/painis/jarvis/data/msia/sireh_park/train/recording_1693045258_10m_sireh_park_7ppl/rgb_interpolated
+
+cd ~/jarvis/data && cp -r --parents ./**/rgb_vid2e /mnt/e/jarvis/data
+cd ~/jarvis/data &&  yolo detect train data= dataset_rgb_vid2e_interpolated.yaml model=yolov8n.pt epochs=100 imgsz=640 batch=32 workers=2 name=train_vid2e_interpolated_v8
